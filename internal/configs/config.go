@@ -3,7 +3,12 @@ package configs
 import "github.com/spf13/viper"
 
 type AppConfig struct {
-	AWS AWSConf `json:"aws"`
+	AWS      AWSConf  `json:"aws"`
+	Business Business `json:"business"`
+}
+
+type Business struct {
+	SupportEmail string `json:"support_email"`
 }
 
 type AWSConf struct {

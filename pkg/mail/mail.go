@@ -1,10 +1,9 @@
-package email
+package mail
 
 import (
 	"github.com/emersion/go-message/mail"
 	"github.com/pkg/errors"
 	"io"
-	"log"
 	"regexp"
 	"strings"
 	"time"
@@ -38,35 +37,6 @@ const (
 	Update = "update"
 	Delete = "delete"
 )
-
-var emailBlogHandler func(*BlogEmail) error
-
-func RegisterEmailHandler(handler func(*BlogEmail) error) {
-	emailBlogHandler = handler
-}
-
-// Notified 该方法在SNS通知或S3轮询时被调用
-func Notified(content string) {
-	r := strings.NewReader(content)
-	// 解析成邮件 -> 判断是否符合格式 -> 如果不符合格式，发送退回邮件 -> 如果符合格式，解析成待发布的博客结构
-	email, err := parseEmail(r)
-	if err != nil {
-		log.Println("Parse Email fail", err)
-		return
-	}
-	blog, err := convert2Blog(email)
-	if err != nil {
-		log.Println("Parse Blog fail", err)
-		if _, ok := errors.Cause(err).(formatError); ok {
-			SendEmailTemplate(email.From.Address, BadFormatTemplate)
-		}
-		return
-	}
-	err = emailBlogHandler(blog)
-	if err != nil {
-		log.Println("Handle email blog fail", err)
-	}
-}
 
 func parseEmail(r io.Reader) (*Email, error) {
 	m, err := mail.CreateReader(r)

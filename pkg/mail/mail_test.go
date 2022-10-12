@@ -1,4 +1,4 @@
-package email
+package mail
 
 import (
 	"github.com/emersion/go-message/mail"
@@ -10,7 +10,7 @@ import (
 )
 
 func TestParseEmail(t *testing.T) {
-	illegalEmail, err := os.Open("receive_test/email1.eml")
+	illegalEmail, err := os.Open("mail_test/email1.eml")
 	if err != nil {
 		t.Fatal(err)
 	}
