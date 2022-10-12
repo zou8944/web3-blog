@@ -3,6 +3,7 @@ package main
 import (
 	"blog-web3/internal/configs"
 	"blog-web3/pkg/infra"
+	"log"
 	"os"
 )
 
@@ -12,10 +13,10 @@ func initAll() {
 		configPath = "internal/configs/dev.yaml"
 	}
 	if err := configs.LoadConfigFile(configPath); err != nil {
-		panic(err)
+		log.Fatalf("%+v", err)
 	}
 	if err := infra.Init(); err != nil {
-		panic(err)
+		log.Fatalf("%+v", err)
 	}
 }
 

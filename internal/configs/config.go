@@ -1,6 +1,9 @@
 package configs
 
-import "github.com/spf13/viper"
+import (
+	"github.com/pkg/errors"
+	"github.com/spf13/viper"
+)
 
 type AppConfig struct {
 	AWS      AWSConf  `json:"aws"`
@@ -23,10 +26,16 @@ type AWSSQSConf struct {
 	Timeout   int32  `json:"timeout"`
 }
 
-var Conf *AppConfig
+var Conf AppConfig
 
 func LoadConfigFile(filepath string) error {
 	viper.SetConfigType("yaml")
 	viper.SetConfigFile(filepath)
-	return viper.Unmarshal(Conf)
+	if err := viper.ReadInConfig(); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := viper.Unmarshal(&Conf); err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
 }
