@@ -6,8 +6,9 @@ import (
 )
 
 type AppConfig struct {
-	AWS      AWSConf  `json:"aws"`
-	Business Business `json:"business"`
+	AWS              AWSConf  `json:"aws"`
+	Business         Business `json:"business"`
+	Web3StorageToken string   `json:"web3_storage_token"`
 }
 
 type Business struct {
