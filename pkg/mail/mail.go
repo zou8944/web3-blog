@@ -191,6 +191,8 @@ func convertBody(b *BlogEmail, s *Email) error {
 	return nil
 }
 
+var formatErrorType formatError
+
 type formatError struct {
 	errString string
 }

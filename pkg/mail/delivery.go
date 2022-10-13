@@ -70,7 +70,7 @@ func onReceive(content string) error {
 	}
 	blog, err := convert2Blog(email)
 	if err != nil {
-		if _, ok := errors.Cause(err).(formatError); ok {
+		if errors.As(err, formatErrorType) {
 			err = SendEmailTemplate(configs.Conf.Business.SupportEmail, email.From.Address, BadFormatTemplate)
 			if err != nil {
 				return errors.WithStack(err)

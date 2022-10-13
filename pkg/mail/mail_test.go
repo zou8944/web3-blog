@@ -80,7 +80,7 @@ func TestParseSubject(t *testing.T) {
 	s.Subject = "[query] #private title"
 	if err := convertSubject(&d, &s); err == nil {
 		t.Fatal("should return error for 'query'")
-	} else if _, ok := errors.Cause(err).(formatError); !ok {
+	} else if !errors.As(err, formatErrorType) {
 		t.Fatal("should return format error for 'query'")
 	}
 	// no visible tag
@@ -92,14 +92,14 @@ func TestParseSubject(t *testing.T) {
 	s.Subject = "#private #public title"
 	if err := convertSubject(&d, &s); err == nil {
 		t.Fatal("should return error for multiple visible tag")
-	} else if _, ok := errors.Cause(err).(formatError); !ok {
+	} else if !errors.As(err, formatErrorType) {
 		t.Fatal("should return format error for  multiple visible tag")
 	}
 	// no title
 	s.Subject = "#private "
 	if err := convertSubject(&d, &s); err == nil {
 		t.Fatal("should return error for empty title")
-	} else if _, ok := errors.Cause(err).(formatError); !ok {
+	} else if !errors.As(err, formatErrorType) {
 		t.Fatal("should return format error for empty title")
 	}
 	// normal case
@@ -124,7 +124,7 @@ func TestParseBody(t *testing.T) {
 	if err == nil {
 		t.Fatal("body too short should be reject")
 	}
-	if _, ok := errors.Cause(err).(formatError); !ok {
+	if !errors.As(err, formatErrorType) {
 		t.Fatal("body too short should be reject")
 	}
 	// normal case
