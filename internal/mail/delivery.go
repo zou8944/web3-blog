@@ -2,8 +2,8 @@ package mail
 
 import (
 	"blog-web3/internal/configs"
-	"blog-web3/pkg/infra/ses"
-	"blog-web3/pkg/infra/sqs"
+	"blog-web3/internal/infra/ses"
+	"blog-web3/internal/infra/sqs"
 	"github.com/pkg/errors"
 	"log"
 	"strings"

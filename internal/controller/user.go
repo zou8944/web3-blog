@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"blog-web3/internal/infra/token"
+	"blog-web3/internal/infra/web3"
 	"blog-web3/internal/model"
 	"blog-web3/internal/utils"
-	"blog-web3/pkg/infra/token"
-	"blog-web3/pkg/infra/web3"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"

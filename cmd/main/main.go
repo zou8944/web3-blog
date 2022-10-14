@@ -2,9 +2,9 @@ package main
 
 import (
 	"blog-web3/internal/configs"
+	"blog-web3/internal/infra"
 	"blog-web3/internal/model"
 	"blog-web3/internal/route"
-	"blog-web3/pkg/infra"
 	"github.com/gin-gonic/gin"
 	"log"
 	"os"
