@@ -7,8 +7,10 @@ import (
 
 type AppConfig struct {
 	AWS              AWSConf  `json:"aws"`
+	Database         Database `json:"database"`
 	Business         Business `json:"business"`
 	Web3StorageToken string   `json:"web3_storage_token"`
+	JWT              JWT      `json:"jwt"`
 }
 
 type Business struct {
@@ -25,6 +27,14 @@ type AWSConf struct {
 type AWSSQSConf struct {
 	QueueName string `json:"queue_name"`
 	Timeout   int32  `json:"timeout"`
+}
+
+type Database struct {
+	SqliteFilePath string `json:"sqlite_file_path"`
+}
+
+type JWT struct {
+	SignKey string `json:"sign_key"`
 }
 
 var Conf AppConfig
