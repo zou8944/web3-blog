@@ -1,35 +1,126 @@
 package logger
 
-import "fmt"
+import (
+	"blog-web3/pkg/app"
+	"github.com/natefinch/lumberjack"
+	"github.com/pkg/errors"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"os"
+	"strings"
+	"time"
+)
 
-func Info(args ...interface{}) {
+var Logger *zap.Logger
 
+func Init(filename string, maxSize, maxBackup, maxAge int, compress bool, logType, level string) error {
+	writerSyncer := getLoggerWriter(filename, maxSize, maxBackup, maxAge, compress, logType)
+	logLevel := new(zapcore.Level)
+	if err := logLevel.UnmarshalText([]byte(level)); err != nil {
+		return errors.WithStack(err)
+	}
+	core := zapcore.NewCore(getEncoder(), writerSyncer, logLevel)
+
+	Logger = zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1), zap.AddStacktrace(zap.ErrorLevel))
+
+	zap.ReplaceGlobals(Logger)
+	return nil
 }
 
-func Infof(format string, args ...interface{}) {
-
+func getEncoder() zapcore.Encoder {
+	encoderConfig := zapcore.EncoderConfig{
+		MessageKey:     "message",
+		LevelKey:       "level",
+		TimeKey:        "time",
+		NameKey:        "Logger",
+		CallerKey:      "caller",
+		FunctionKey:    zapcore.OmitKey,
+		StacktraceKey:  "stacktrace",
+		LineEnding:     zapcore.DefaultLineEnding,
+		EncodeLevel:    zapcore.CapitalLevelEncoder,
+		EncodeTime:     customTimeEncoder,
+		EncodeDuration: zapcore.SecondsDurationEncoder,
+		EncodeCaller:   zapcore.ShortCallerEncoder,
+	}
+	if app.IsLocal() || app.IsDev() || app.IsTest() {
+		encoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
+		return zapcore.NewConsoleEncoder(encoderConfig)
+	} else {
+		return zapcore.NewJSONEncoder(encoderConfig)
+	}
 }
 
-func Warn(args ...interface{}) {
-
+func customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+	enc.AppendString(t.Format("2006-01-02 15:04:05"))
 }
 
-func Warnf(format string, args ...interface{}) {
+func getLoggerWriter(filename string, maxSize, maxBackup, maxAge int, compress bool, logType string) zapcore.WriteSyncer {
+	if logType == "daily" {
+		logName := time.Now().Format("2006-01-02.log")
+		filename = strings.ReplaceAll(filename, "logs.log", logName)
+	}
 
+	lumberJackLogger := &lumberjack.Logger{
+		Filename:   filename,
+		MaxSize:    maxSize,
+		MaxAge:     maxAge,
+		MaxBackups: maxBackup,
+		Compress:   compress,
+	}
+
+	if app.IsLocal() {
+		return zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(lumberJackLogger))
+	} else {
+		return zapcore.AddSync(lumberJackLogger)
+	}
 }
 
-func Error(args ...interface{}) {
-
+func InfoIf(err error) {
+	if err != nil {
+		Logger.Info("Error Occurred: ", zap.Error(err))
+	}
 }
 
-func Errorf(format string, args ...interface{}) {
-	fmt.Printf(format, args)
+func WarnIf(err error) {
+	if err != nil {
+		Logger.Warn("Error Occurred: ", zap.Error(err))
+	}
 }
 
-func Debug(args ...interface{}) {
-
+func ErrorIf(err error) {
+	if err != nil {
+		Logger.Error("Error Occurred: ", zap.Error(err))
+	}
 }
 
-func Debugf(format string, args ...interface{}) {
+func Debug(message string, fields ...zap.Field) {
+	Logger.Debug(message, fields...)
+}
 
+func Info(message string, fields ...zap.Field) {
+	Logger.Info(message, fields...)
+}
+
+func Warn(message string, fields ...zap.Field) {
+	Logger.Warn(message, fields...)
+}
+
+func Error(message string, fields ...zap.Field) {
+	Logger.Error(message, fields...)
+}
+
+func Debugf(template string, args ...interface{}) {
+	Logger.Sugar().Debugf(template, args...)
+}
+
+func Infof(template string, args ...interface{}) {
+	Logger.Sugar().Infof(template, args...)
+}
+
+func Warnf(template string, args ...interface{}) {
+	Logger.Sugar().Warnf(template, args...)
+}
+
+func Errorf(template string, args ...interface{}) {
+	Logger.Sugar().Errorf(template, args)
 }

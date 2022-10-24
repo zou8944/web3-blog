@@ -50,7 +50,7 @@ func StartListenMailer() {
 func receiveAndHandle() bool {
 	messages, err := mail.DefaultMailer().ReceiveMessageAsString()
 	if err != nil {
-		logger.Error("Receive Mail message fail.", err)
+		logger.Errorf("Receive Mail message fail. %v", err)
 		return false
 	}
 	for _, message := range messages {
@@ -64,7 +64,7 @@ func onReceive(message string) bool {
 	// convert string to eml.Email -> check format -> send backoff email if illegal format -> convert eml.Email to BlogMail if legal format
 	email, err := eml.Parse(r)
 	if err != nil {
-		logger.Error("Convert message to eml.Email fail.", err)
+		logger.Errorf("Convert message to eml.Email fail. %v", err)
 		return false
 	}
 	blog, err := convert2Blog(email)

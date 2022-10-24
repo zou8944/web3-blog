@@ -12,7 +12,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	sqsTypes "github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/pkg/errors"
-	"log"
 )
 
 type AWSMailer struct {
@@ -90,7 +89,7 @@ func (m *AWSMailer) ReceiveMessage() ([]sqsTypes.Message, error) {
 		MaxNumberOfMessages: 10,
 		WaitTimeSeconds:     appConfig.AWS.SNS.Timeout,
 	}
-	log.Println("Try receive message from sqs...")
+	logger.Infof("Try receive message from sqs...")
 	receiveOutput, err := m.SQS.ReceiveMessage(context.Background(), receiveInput)
 	return receiveOutput.Messages, errors.WithStack(err)
 }

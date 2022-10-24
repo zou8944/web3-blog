@@ -33,7 +33,7 @@ func GenerateJWT(user *models.User) string {
 	}
 	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(config.JWT.SignKey))
 	if err != nil {
-		logger.Error("Generate jwt fail.", err)
+		logger.Errorf("Generate jwt fail. %v", err)
 		return ""
 	}
 	return token
@@ -44,7 +44,7 @@ func ParseJWT(token string) *Claims {
 		return []byte(config.JWT.SignKey), nil
 	})
 	if err != nil {
-		logger.Warn("Parse jwt fail.", err)
+		logger.Errorf("Parse jwt fail. %v", err)
 		return nil
 	}
 	return tokenClaims.Claims.(*Claims)

@@ -1,7 +1,17 @@
+server:
+  port: 9000
+logger:
+  filename: storage/log/logs.log
+  max_size: 90000
+  max_backup: 10
+  max_age: 90000
+  compress: false
+  log_type: daily
+  level: debug
 aws:
   region: xxx
-  accessKey: xxx
-  secretKey: xxx
+  access_key: xxx
+  secret_key: xxx
   sqs:
     queue_name: email-box
     timeout: 30

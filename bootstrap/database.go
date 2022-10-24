@@ -1,7 +1,12 @@
 package bootstrap
 
-import "blog-web3/pkg/database"
+import (
+	"blog-web3/pkg/database"
+	"fmt"
+)
 
 func SetupDatabase() {
-	database.Connect()
+	if err := database.Connect(); err != nil {
+		panic(fmt.Sprintf("Database Connect fail. %v", err))
+	}
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func TestParseEmail(t *testing.T) {
-	illegalEmail, err := os.Open("mail_test/email1.eml")
+	illegalEmail, err := os.Open("eml_test/email1.eml")
 	if err != nil {
 		t.Fatal(err)
 	}

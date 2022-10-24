@@ -16,9 +16,9 @@ const (
 	EnvProduction = "prod"
 )
 
-// LoadConfig Rule
-// if env present, load {env}.yaml, load default.yaml else
-func LoadConfig() {
+// LoadConfigFile
+// if env present, load {env}.yaml, else, load default.yaml
+func LoadConfigFile() error {
 	env := determineEnv()
 
 	cfgDir := "config"
@@ -27,20 +27,22 @@ func LoadConfig() {
 	case EnvLocal, EnvDev, EnvTest, EnvQA, EnvProduction:
 		cfgPath := fmt.Sprintf("%s/%s.yaml", cfgDir, env)
 		if _, err := os.Stat(cfgPath); err != nil {
-			logger.Warn(fmt.Sprintf("File %s not exist, load config/default.yaml", cfgPath))
+			logger.Warnf("File %s not exist, load config/default.yaml", cfgPath)
 			break
 		}
 		cfgName = env
+		viper.Set("env", env)
 	default:
-		panic("Unknown env: " + env)
+		return fmt.Errorf("Unknown env: %s", env)
 	}
 	cfgPath := fmt.Sprintf("%s/%s.yaml", cfgDir, cfgName)
 
 	viper.SetConfigType("yaml")
 	viper.SetConfigFile(cfgPath)
 	if err := viper.ReadInConfig(); err != nil {
-		panic(fmt.Sprintf("Read Config file failed. %v", err))
+		return fmt.Errorf("Read Config file failed. %v", err)
 	}
+	return nil
 }
 
 // retrieve env from --env, environment variable
