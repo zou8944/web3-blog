@@ -15,7 +15,7 @@ type User struct {
 	UpdatedAt     types.UnixTime `json:"-"`
 }
 
-func GetByPublicAddress(pa string) (*User, error) {
+func GetUserByPublicAddress(pa string) (*User, error) {
 	var user User
 	database.DB.Where("public_address = ?", pa).Find(&user)
 	return &user, errors.WithStack(database.DB.Error)

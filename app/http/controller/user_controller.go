@@ -1,12 +1,13 @@
 package controller
 
 import (
+	"blog-web3/app/http/requests"
 	"blog-web3/app/models"
+	"blog-web3/pkg/helpers"
 	"blog-web3/pkg/jwt"
 	"blog-web3/pkg/response"
 	"blog-web3/pkg/web3"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 	"net/http"
@@ -19,37 +20,43 @@ func NewUserController() *UserController {
 }
 
 func (uc *UserController) CreateUser(c *gin.Context) {
-	var inputUser models.User
-	if err := c.ShouldBind(inputUser); err != nil {
-		response.AbortWith400(c, err)
+	var request requests.CreateUserRequest
+	if ok := requests.BindAndValidate(c, &request); !ok {
 		return
 	}
-	uid, err := uuid.NewRandom()
-	if err != nil {
+
+	nonce := helpers.GenerateNonce()
+	if nonce == "" {
+		response.AbortWith500(c, errors.New("Create User fail"))
+		return
+	}
+
+	user := models.User{
+		PublicAddress: request.PublicAddress,
+		UniqueName:    request.UniqueName,
+		Nonce:         nonce,
+	}
+
+	if _, err := user.Save(); err != nil {
 		response.AbortWith500(c, err)
 		return
 	}
-	inputUser.Nonce = uid.String()
-	if _, err := inputUser.Save(); err != nil {
-		response.AbortWith500(c, err)
-		return
-	}
-	response.Data(c, nil)
+	response.Data(c, user)
 }
 
 func (uc *UserController) OverrideUser(c *gin.Context) {
-	var inputUser models.User
-	if err := c.ShouldBind(inputUser); err != nil {
-		response.AbortWith400(c, err)
+	var request requests.UpdateUserRequest
+	if ok := requests.BindAndValidate(c, &request); !ok {
 		return
 	}
 	publicAddress := c.Param("publicAddress")
-	existUser, err := models.GetByPublicAddress(publicAddress)
+
+	existUser, err := models.GetUserByPublicAddress(publicAddress)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		response.StatusData(c, http.StatusNotFound, nil)
 		return
 	}
-	existUser.UniqueName = inputUser.UniqueName
+	existUser.UniqueName = request.UniqueName
 	newUser, err := existUser.Save()
 	if err != nil {
 		response.AbortWith500(c, err)
@@ -60,7 +67,7 @@ func (uc *UserController) OverrideUser(c *gin.Context) {
 
 func (uc *UserController) GetUser(c *gin.Context) {
 	publicAddress := c.Param("publicAddress")
-	user, err := models.GetByPublicAddress(publicAddress)
+	user, err := models.GetUserByPublicAddress(publicAddress)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		response.StatusData(c, http.StatusNotFound, nil)
 		return
@@ -69,20 +76,18 @@ func (uc *UserController) GetUser(c *gin.Context) {
 }
 
 func (uc *UserController) LoginWithMetaMask(c *gin.Context) {
-	var inputBody map[string]string
-	if err := c.ShouldBind(&inputBody); err != nil {
-		response.AbortWith400(c, err)
+	var body requests.LoginMetaMaskRequest
+	if ok := requests.BindAndValidate(c, &body); !ok {
+		return
 	}
-	publicAddress := inputBody["publicAddress"]
-	signature := inputBody["signature"]
-	user, err := models.GetByPublicAddress(publicAddress)
+
+	user, err := models.GetUserByPublicAddress(body.PublicAddress)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		response.StatusData(c, http.StatusNotFound, nil)
 		return
 	}
-	nonce := user.Nonce
 
-	if sigValid := web3.VerifySignature(publicAddress, signature, nonce); !sigValid {
+	if sigValid := web3.VerifySignature(body.PublicAddress, body.Signature, user.Nonce); !sigValid {
 		response.AbortWith400(c, errors.New("signature invalid"))
 		return
 	}
