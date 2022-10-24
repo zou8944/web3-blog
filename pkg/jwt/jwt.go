@@ -1,0 +1,51 @@
+package jwt
+
+import (
+	"blog-web3/app/models"
+	"blog-web3/config"
+	"blog-web3/pkg/logger"
+	"github.com/dgrijalva/jwt-go"
+	"time"
+)
+
+type Claims struct {
+	models.User
+	jwt.StandardClaims
+}
+
+type StandardClaims struct {
+	Audience  string `json:"aud,omitempty"`
+	ExpiresAt int64  `json:"exp,omitempty"`
+	Id        string `json:"jti,omitempty"`
+	IssuedAt  int64  `json:"iat,omitempty"`
+	Issuer    string `json:"iss,omitempty"`
+	NotBefore int64  `json:"nbf,omitempty"`
+	Subject   string `json:"sub,omitempty"`
+}
+
+func GenerateJWT(user *models.User) string {
+	claims := Claims{
+		User: *user,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(30000000 * time.Second).Unix(),
+			Issuer:    "zou8944",
+		},
+	}
+	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(config.JWT.SignKey))
+	if err != nil {
+		logger.Error("Generate jwt fail.", err)
+		return ""
+	}
+	return token
+}
+
+func ParseJWT(token string) *Claims {
+	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(config.JWT.SignKey), nil
+	})
+	if err != nil {
+		logger.Warn("Parse jwt fail.", err)
+		return nil
+	}
+	return tokenClaims.Claims.(*Claims)
+}

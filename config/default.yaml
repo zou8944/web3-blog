@@ -1,0 +1,14 @@
+aws:
+  region: xxx
+  accessKey: xxx
+  secretKey: xxx
+  sqs:
+    queue_name: email-box
+    timeout: 30
+database:
+  sqlite_file_path: web3_blog.db
+business:
+  support_email: support@zou8944.com
+web3_storage_token: xxx
+jwt:
+  sign_key: xxxx
