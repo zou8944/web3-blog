@@ -48,9 +48,9 @@ func StartListenMailer() {
 }
 
 func receiveAndHandle() bool {
-	messages, err := mail.DefaultMailer().ReceiveMessageAsString()
+	messages, err := mail.DefaultMailer().Receive()
 	if err != nil {
-		logger.Errorf("Receive Mail message fail. %v", err)
+		logger.Errorf("Receive message fail. %v", err)
 		return false
 	}
 	for _, message := range messages {
@@ -59,23 +59,30 @@ func receiveAndHandle() bool {
 	return true
 }
 
-func onReceive(message string) bool {
-	r := strings.NewReader(message)
+func onReceive(message mail.ReceivedMail) bool {
+	r := strings.NewReader(message.Content)
 	// convert string to eml.Email -> check format -> send backoff email if illegal format -> convert eml.Email to BlogMail if legal format
 	email, err := eml.Parse(r)
 	if err != nil {
-		logger.Errorf("Convert message to eml.Email fail. %v", err)
+		logger.Errorf("Convert message to eml.Email fail. message: %v, err: %v", message, err)
 		return false
 	}
 	blog, err := convert2Blog(email)
 	if err != nil {
-		if errors.As(err, formatErrorType) {
+		if errors.As(err, &formatErrorType) {
+			logger.Infof("Convert email to blog fail. %v", err)
 			SendEmailTemplate(config.Business.SupportEmail, email.From.Address, BadFormatTemplate)
+			// notify success, even if send mail fail
+			message.Notifier.Notify()
 		}
 		return false
 	}
-	err = emailBlogHandleFun(blog)
-	return err == nil
+	if err := emailBlogHandleFun(blog); err == nil {
+		message.Notifier.Notify()
+		return false
+	} else {
+		return true
+	}
 }
 
 func SendEmailTemplate(from, to string, template ResponseTemplate) bool {

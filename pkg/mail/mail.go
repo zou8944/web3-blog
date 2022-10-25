@@ -22,6 +22,6 @@ func (s *Mailer) Send(sender, recipient, subject, content string) bool {
 	return s.Driver.Send(sender, recipient, subject, content)
 }
 
-func (s *Mailer) ReceiveMessageAsString() ([]string, error) {
-	return s.Driver.ReceiveMessageAsString()
+func (s *Mailer) Receive() ([]ReceivedMail, error) {
+	return s.Driver.Receive()
 }
