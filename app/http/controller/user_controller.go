@@ -6,11 +6,7 @@ import (
 	"blog-web3/pkg/helpers"
 	"blog-web3/pkg/jwt"
 	"blog-web3/pkg/response"
-	"blog-web3/pkg/web3"
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
-	"gorm.io/gorm"
-	"net/http"
 )
 
 type UserController struct{}
@@ -27,7 +23,7 @@ func (uc *UserController) CreateUser(c *gin.Context) {
 
 	nonce := helpers.GenerateNonce()
 	if nonce == "" {
-		response.AbortWith500(c, errors.New("Create User fail"))
+		response.AbortWith500(c)
 		return
 	}
 
@@ -38,10 +34,10 @@ func (uc *UserController) CreateUser(c *gin.Context) {
 	}
 
 	if _, err := user.Save(); err != nil {
-		response.AbortWith500(c, err)
+		response.AbortWith500(c)
 		return
 	}
-	response.Data(c, user)
+	response.Created(c, user)
 }
 
 func (uc *UserController) OverrideUser(c *gin.Context) {
@@ -51,28 +47,28 @@ func (uc *UserController) OverrideUser(c *gin.Context) {
 	}
 	publicAddress := c.Param("publicAddress")
 
-	existUser, err := models.GetUserByPublicAddress(publicAddress)
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		response.StatusData(c, http.StatusNotFound, nil)
+	existUser := models.GetUserByPublicAddress(publicAddress)
+	if existUser.ID <= 0 {
+		response.NotFound(c)
 		return
 	}
 	existUser.UniqueName = request.UniqueName
 	newUser, err := existUser.Save()
 	if err != nil {
-		response.AbortWith500(c, err)
+		response.AbortWith500(c)
 		return
 	}
-	response.Data(c, newUser)
+	response.SuccessWithData(c, newUser)
 }
 
 func (uc *UserController) GetUser(c *gin.Context) {
 	publicAddress := c.Param("publicAddress")
-	user, err := models.GetUserByPublicAddress(publicAddress)
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		response.StatusData(c, http.StatusNotFound, nil)
+	user := models.GetUserByPublicAddress(publicAddress)
+	if user.ID <= 0 {
+		response.NotFound(c)
 		return
 	}
-	response.Data(c, user)
+	response.SuccessWithData(c, user)
 }
 
 func (uc *UserController) LoginWithMetaMask(c *gin.Context) {
@@ -81,22 +77,28 @@ func (uc *UserController) LoginWithMetaMask(c *gin.Context) {
 		return
 	}
 
-	user, err := models.GetUserByPublicAddress(body.PublicAddress)
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		response.StatusData(c, http.StatusNotFound, nil)
+	user := models.GetUserByPublicAddress(body.PublicAddress)
+	if user.ID <= 0 {
+		response.NotFound(c)
 		return
 	}
 
-	if sigValid := web3.VerifySignature(body.PublicAddress, body.Signature, user.Nonce); !sigValid {
-		response.AbortWith400(c, errors.New("signature invalid"))
+	//if sigValid := web3.VerifySignature(body.PublicAddress, body.Signature, user.Nonce); !sigValid {
+	//	response.AbortWith400(c, errors.New("signature invalid"))
+	//	return
+	//}
+	user.Nonce = helpers.GenerateNonce()
+	newUser, err := user.Save()
+	if err != nil {
+		response.AbortWith500(c)
 		return
 	}
 	if _jwt := jwt.GenerateJWT(user); _jwt != "" {
-		response.Data(c, gin.H{
+		response.SuccessWithData(c, gin.H{
 			"token": _jwt,
-			"user":  user,
+			"user":  newUser,
 		})
 	} else {
-		response.AbortWith500(c, err)
+		response.AbortWith500(c)
 	}
 }

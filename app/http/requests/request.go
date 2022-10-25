@@ -4,7 +4,6 @@ import (
 	"blog-web3/pkg/response"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"net/http"
 )
 
 var validate *validator.Validate
@@ -20,7 +19,7 @@ func BindAndValidate(c *gin.Context, value interface{}) bool {
 	}
 	if err := validate.Struct(value); err != nil {
 		errs := retrieveValidationErrors(err)
-		response.StatusData(c, http.StatusBadRequest, errs)
+		response.AbortWithValidateFail(c, errs)
 		return false
 	}
 	return true
@@ -28,7 +27,7 @@ func BindAndValidate(c *gin.Context, value interface{}) bool {
 
 func retrieveValidationErrors(err error) map[string]string {
 	vErrs := err.(validator.ValidationErrors)
-	var errs map[string]string
+	errs := make(map[string]string)
 	for _, vErr := range vErrs {
 		errs[vErr.Field()] = vErr.Error()
 	}

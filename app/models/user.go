@@ -2,23 +2,22 @@ package models
 
 import (
 	"blog-web3/pkg/database"
-	"blog-web3/pkg/types"
-	"github.com/pkg/errors"
+	"time"
 )
 
 type User struct {
-	ID            int64          `json:"id" gorm:"primary key"`
-	PublicAddress string         `json:"public_address" gorm:"uniqueIndex"`
-	UniqueName    string         `json:"unique_name" gorm:"uniqueIndex"`
-	Nonce         string         `json:"nonce"`
-	CreatedAt     types.UnixTime `json:"-"`
-	UpdatedAt     types.UnixTime `json:"-"`
+	ID            int64     `json:"id" gorm:"primary key"`
+	PublicAddress string    `json:"public_address" gorm:"uniqueIndex"`
+	UniqueName    string    `json:"unique_name" gorm:"uniqueIndex"`
+	Nonce         string    `json:"nonce"`
+	CreatedAt     time.Time `json:"-"`
+	UpdatedAt     time.Time `json:"-"`
 }
 
-func GetUserByPublicAddress(pa string) (*User, error) {
+func GetUserByPublicAddress(pa string) *User {
 	var user User
-	database.DB.Where("public_address = ?", pa).Find(&user)
-	return &user, errors.WithStack(database.DB.Error)
+	database.DB.Where("public_address = ?", pa).First(&user)
+	return &user
 }
 
 func (user *User) Save() (*User, error) {
