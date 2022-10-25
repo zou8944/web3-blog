@@ -1,7 +1,6 @@
 package config
 
 import (
-	"blog-web3/pkg/logger"
 	"flag"
 	"fmt"
 	"github.com/spf13/viper"
@@ -9,6 +8,7 @@ import (
 )
 
 const (
+	EnvDefault    = "default"
 	EnvLocal      = "local"
 	EnvDev        = "dev"
 	EnvTest       = "test"
@@ -22,18 +22,21 @@ func LoadConfigFile() error {
 	env := determineEnv()
 
 	cfgDir := "config"
-	cfgName := "default"
+	cfgName := EnvDefault
 	switch env {
+	case "":
+		viper.Set("env", EnvDefault)
 	case EnvLocal, EnvDev, EnvTest, EnvQA, EnvProduction:
 		cfgPath := fmt.Sprintf("%s/%s.yaml", cfgDir, env)
 		if _, err := os.Stat(cfgPath); err != nil {
-			logger.Warnf("File %s not exist, load config/default.yaml", cfgPath)
+			// todo it should be print with logger
+			fmt.Printf("file %s not exist, load config/default.yaml", cfgPath)
 			break
 		}
 		cfgName = env
 		viper.Set("env", env)
 	default:
-		return fmt.Errorf("Unknown env: %s", env)
+		return fmt.Errorf("unknown env: %s", env)
 	}
 	cfgPath := fmt.Sprintf("%s/%s.yaml", cfgDir, cfgName)
 

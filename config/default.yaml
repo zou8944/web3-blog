@@ -16,6 +16,7 @@ aws:
     queue_name: email-box
     timeout: 30
 database:
+  driver: sqlite
   sqlite_file_path: web3_blog.db
 business:
   support_email: support@zou8944.com

@@ -1,6 +1,7 @@
 package bootstrap
 
 import (
+	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"time"
@@ -17,4 +18,5 @@ func SetupServer(engine *gin.Engine) {
 		AllowWildcard:          true,
 		AllowBrowserExtensions: true,
 	}))
+	fmt.Println("Logger load success")
 }

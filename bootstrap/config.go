@@ -15,4 +15,5 @@ func SetupConfig() {
 	if err := config.Parse(); err != nil {
 		panic(fmt.Sprintf("Parse config fail. %v", err))
 	}
+	fmt.Println("Config load success")
 }

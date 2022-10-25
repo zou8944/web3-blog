@@ -5,53 +5,55 @@ import (
 	"github.com/spf13/viper"
 )
 
+// viper use mapstructure to unmarshal config to struct, instead json or yaml
+
 type app struct {
-	Server           server   `json:"server"`
-	Logger           logger   `json:"logger"`
-	AWS              aws      `json:"aws"`
-	Database         database `json:"database"`
-	Business         business `json:"business"`
-	Web3StorageToken string   `json:"web3_storage_token"`
-	JWT              jwt      `json:"jwt"`
+	Server           server   `mapstructure:"server"`
+	Logger           logger   `mapstructure:"logger"`
+	AWS              aws      `mapstructure:"aws"`
+	Database         database `mapstructure:"database"`
+	Business         business `mapstructure:"business"`
+	Web3StorageToken string   `mapstructure:"web3_storage_token"`
+	JWT              jwt      `mapstructure:"jwt"`
 }
 
 type server struct {
-	Port int `json:"port"`
+	Port int `mapstructure:"port"`
 }
 
 type logger struct {
-	Filename  string `json:"filename"`
-	MaxSize   int    `json:"max_size"`
-	MaxBackup int    `json:"max_backup"`
-	MaxAge    int    `json:"max_age"`
-	Compress  bool   `json:"compress"`
-	LogType   string `json:"log_type"`
-	Level     string `json:"level"`
+	Filename  string `mapstructure:"filename"`
+	MaxSize   int    `mapstructure:"max_size"`
+	MaxBackup int    `mapstructure:"max_backup"`
+	MaxAge    int    `mapstructure:"max_age"`
+	Compress  bool   `mapstructure:"compress"`
+	LogType   string `mapstructure:"log_type"`
+	Level     string `mapstructure:"level"`
 }
 
 type business struct {
-	SupportEmail string `json:"support_email"`
+	SupportEmail string `mapstructure:"support_email"`
 }
 
 type aws struct {
-	Region    string `json:"region"`
-	AccessKey string `json:"access_key"`
-	SecretKey string `json:"secret_key"`
-	SNS       awsSqs `json:"sns"`
+	Region    string `mapstructure:"region"`
+	AccessKey string `mapstructure:"access_key"`
+	SecretKey string `mapstructure:"secret_key"`
+	SQS       awsSqs `mapstructure:"sqs"`
 }
 
 type awsSqs struct {
-	QueueName string `json:"queue_name"`
-	Timeout   int32  `json:"timeout"`
+	QueueName string `mapstructure:"queue_name"`
+	Timeout   int32  `mapstructure:"timeout"`
 }
 
 type database struct {
-	Driver         string `json:"driver"`
-	SqliteFilePath string `json:"sqlite_file_path"`
+	Driver         string `mapstructure:"driver"`
+	SqliteFilePath string `mapstructure:"sqlite_file_path"`
 }
 
 type jwt struct {
-	SignKey string `json:"sign_key"`
+	SignKey string `mapstructure:"sign_key"`
 }
 
 var ENV string

@@ -75,7 +75,7 @@ func (m *AWSMailer) Send(sender, recipient, subject, content string) bool {
 
 func (m *AWSMailer) ReceiveMessage() ([]sqsTypes.Message, error) {
 	getQueueUrlInput := &sqs.GetQueueUrlInput{
-		QueueName: aws.String(appConfig.AWS.SNS.QueueName),
+		QueueName: aws.String(appConfig.AWS.SQS.QueueName),
 	}
 	getQueueUrlOutput, err := m.SQS.GetQueueUrl(context.TODO(), getQueueUrlInput)
 	if err != nil {
@@ -87,11 +87,15 @@ func (m *AWSMailer) ReceiveMessage() ([]sqsTypes.Message, error) {
 		},
 		QueueUrl:            getQueueUrlOutput.QueueUrl,
 		MaxNumberOfMessages: 10,
-		WaitTimeSeconds:     appConfig.AWS.SNS.Timeout,
+		WaitTimeSeconds:     appConfig.AWS.SQS.Timeout,
 	}
 	logger.Infof("Try receive message from sqs...")
 	receiveOutput, err := m.SQS.ReceiveMessage(context.Background(), receiveInput)
-	return receiveOutput.Messages, errors.WithStack(err)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	} else {
+		return receiveOutput.Messages, nil
+	}
 }
 
 func (m *AWSMailer) ReceiveMessageAsString() ([]string, error) {

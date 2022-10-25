@@ -19,4 +19,5 @@ func SetupLogger() {
 	if err != nil {
 		panic(fmt.Sprintf("Log initialize fail. %v", err))
 	}
+	fmt.Println("Logger load success")
 }
