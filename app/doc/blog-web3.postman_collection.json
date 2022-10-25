@@ -1,0 +1,148 @@
+{
+	"info": {
+		"_postman_id": "00766e61-2e91-4ba5-8b52-7f348c3a4ab7",
+		"name": "blog-web3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7326867"
+	},
+	"item": [
+		{
+			"name": "User Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"unique_name\": \"123\",\n    \"public_address\": \"345\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"unique_name\": \"guodong\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/users/:publicAddress",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users",
+						":publicAddress"
+					],
+					"variable": [
+						{
+							"key": "publicAddress",
+							"value": "34"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/users/:publicAddress",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users",
+						":publicAddress"
+					],
+					"variable": [
+						{
+							"key": "publicAddress",
+							"value": "345"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login with metamask",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"public_address\": \"345\",\n    \"signature\": \"0x111\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/users/login/metamask",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"users",
+						"login",
+						"metamask"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "localhost:9000",
+			"type": "string"
+		}
+	]
+}
