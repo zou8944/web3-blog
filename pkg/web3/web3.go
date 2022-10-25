@@ -1,25 +1,26 @@
 package web3
 
 import (
+	"blog-web3/pkg/logger"
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/pkg/errors"
-	"log"
+	"strings"
 )
 
-func VerifySignature(publicAddr, signature, message string) bool {
-	sig := hexutil.MustDecode(signature)
-	msg := accounts.TextHash([]byte(message))
-	if sig[crypto.RecoveryIDOffset] == 27 || sig[crypto.RecoveryIDOffset] == 28 {
-		sig[crypto.RecoveryIDOffset] -= 27
+func VerifySignature(publicAddress, signature, message string) bool {
+	messageBytes := accounts.TextHash([]byte(message))
+	signatureBytes := hexutil.MustDecode(signature)
+
+	if signatureBytes[crypto.RecoveryIDOffset] == 27 || signatureBytes[crypto.RecoveryIDOffset] == 28 {
+		signatureBytes[crypto.RecoveryIDOffset] -= 27
 	}
-	recovered, err := crypto.SigToPub(msg, sig)
+	recoveredPublicKey, err := crypto.SigToPub(messageBytes, signatureBytes)
 	if err != nil {
-		log.Println(errors.WithStack(err))
+		logger.Debugf("web3 signature verify fail. public_address:%s, message:%s, signature:%s", publicAddress, message, signature)
 		return false
 	}
-	recoveredAddr := crypto.PubkeyToAddress(*recovered)
+	recoveredPublicAddress := crypto.PubkeyToAddress(*recoveredPublicKey).Hex()
 
-	return publicAddr == recoveredAddr.Hex()
+	return strings.ToUpper(publicAddress) == strings.ToUpper(recoveredPublicAddress)
 }

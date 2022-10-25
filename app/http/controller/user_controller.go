@@ -6,7 +6,9 @@ import (
 	"blog-web3/pkg/helpers"
 	"blog-web3/pkg/jwt"
 	"blog-web3/pkg/response"
+	"blog-web3/pkg/web3"
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 )
 
 type UserController struct{}
@@ -83,10 +85,11 @@ func (uc *UserController) LoginWithMetaMask(c *gin.Context) {
 		return
 	}
 
-	//if sigValid := web3.VerifySignature(body.PublicAddress, body.Signature, user.Nonce); !sigValid {
-	//	response.AbortWith400(c, errors.New("signature invalid"))
-	//	return
-	//}
+	// todo move to requests package
+	if sigValid := web3.VerifySignature(body.PublicAddress, body.Signature, user.Nonce); !sigValid {
+		response.AbortWith400(c, errors.New("signature invalid"))
+		return
+	}
 	user.Nonce = helpers.GenerateNonce()
 	newUser, err := user.Save()
 	if err != nil {
