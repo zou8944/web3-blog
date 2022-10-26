@@ -7,9 +7,9 @@ import (
 )
 
 func SetupMailer() {
-	ec := controller.NewEmailController()
+	ac := controller.ArticleController{}
 
-	mail.RegisterEmailHandler(ec.HandleEmail)
+	mail.RegisterEmailHandler(ac.HandleEmail)
 	mail.StartListenMailer()
 	fmt.Println("Mailer started")
 }

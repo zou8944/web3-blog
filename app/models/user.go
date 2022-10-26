@@ -6,7 +6,7 @@ import (
 )
 
 type User struct {
-	ID            int64     `json:"id" gorm:"primary key"`
+	ID            int64     `json:"id" gorm:"primaryKey"`
 	PublicAddress string    `json:"public_address" gorm:"uniqueIndex"`
 	UniqueName    string    `json:"unique_name" gorm:"uniqueIndex"`
 	Nonce         string    `json:"nonce"`
