@@ -1,9 +1,9 @@
 package bootstrap
 
 import (
-	"blog-web3/app/http/controller"
-	"blog-web3/app/mail"
 	"fmt"
+	"github.com/project5e/web3-blog/app/http/controller"
+	"github.com/project5e/web3-blog/app/mail"
 )
 
 func SetupMailer() {

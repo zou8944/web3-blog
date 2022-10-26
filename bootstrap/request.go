@@ -1,8 +1,8 @@
 package bootstrap
 
 import (
-	"blog-web3/app/http/requests"
 	"fmt"
+	"github.com/project5e/web3-blog/app/http/requests"
 )
 
 func SetupRequest() {

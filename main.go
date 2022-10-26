@@ -1,12 +1,12 @@
 package main
 
 import (
-	"blog-web3/app/route"
-	"blog-web3/bootstrap"
-	"blog-web3/config"
-	"blog-web3/pkg/logger"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/project5e/web3-blog/app/route"
+	"github.com/project5e/web3-blog/bootstrap"
+	"github.com/project5e/web3-blog/config"
+	"github.com/project5e/web3-blog/pkg/logger"
 )
 
 func main() {

@@ -1,6 +1,6 @@
 package models
 
-import "blog-web3/pkg/database"
+import "github.com/project5e/web3-blog/pkg/database"
 
 func Migrate() error {
 	return database.DB.AutoMigrate(&User{}, &Article{})

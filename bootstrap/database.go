@@ -1,9 +1,9 @@
 package bootstrap
 
 import (
-	"blog-web3/app/models"
-	"blog-web3/pkg/database"
 	"fmt"
+	"github.com/project5e/web3-blog/app/models"
+	"github.com/project5e/web3-blog/pkg/database"
 )
 
 func SetupDatabase() {

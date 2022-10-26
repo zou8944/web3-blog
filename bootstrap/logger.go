@@ -1,9 +1,9 @@
 package bootstrap
 
 import (
-	"blog-web3/config"
-	"blog-web3/pkg/logger"
 	"fmt"
+	"github.com/project5e/web3-blog/config"
+	"github.com/project5e/web3-blog/pkg/logger"
 )
 
 func SetupLogger() {

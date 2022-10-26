@@ -1,10 +1,10 @@
 package web3
 
 import (
-	"blog-web3/pkg/logger"
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/project5e/web3-blog/pkg/logger"
 	"strings"
 )
 

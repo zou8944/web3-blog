@@ -1,9 +1,9 @@
 package requests
 
 import (
-	"blog-web3/pkg/response"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/project5e/web3-blog/pkg/response"
 )
 
 var validate *validator.Validate

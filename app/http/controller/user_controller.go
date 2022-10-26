@@ -1,14 +1,14 @@
 package controller
 
 import (
-	"blog-web3/app/http/requests"
-	"blog-web3/app/models"
-	"blog-web3/pkg/helpers"
-	"blog-web3/pkg/jwt"
-	"blog-web3/pkg/response"
-	"blog-web3/pkg/web3"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"github.com/project5e/web3-blog/app/http/requests"
+	"github.com/project5e/web3-blog/app/models"
+	"github.com/project5e/web3-blog/pkg/helpers"
+	"github.com/project5e/web3-blog/pkg/jwt"
+	"github.com/project5e/web3-blog/pkg/response"
+	"github.com/project5e/web3-blog/pkg/web3"
 )
 
 type UserController struct{}

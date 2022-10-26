@@ -1,10 +1,10 @@
 package jwt
 
 import (
-	"blog-web3/app/models"
-	"blog-web3/config"
-	"blog-web3/pkg/logger"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/project5e/web3-blog/app/models"
+	"github.com/project5e/web3-blog/config"
+	"github.com/project5e/web3-blog/pkg/logger"
 	"time"
 )
 

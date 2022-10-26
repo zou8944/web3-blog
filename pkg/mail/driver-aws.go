@@ -1,8 +1,6 @@
 package mail
 
 import (
-	appConfig "blog-web3/config"
-	"blog-web3/pkg/logger"
 	"context"
 	"encoding/base64"
 	"encoding/json"
@@ -14,6 +12,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	sqsTypes "github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/pkg/errors"
+	appConfig "github.com/project5e/web3-blog/config"
+	"github.com/project5e/web3-blog/pkg/logger"
 )
 
 type AWSMailer struct {

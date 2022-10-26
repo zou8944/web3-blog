@@ -1,11 +1,11 @@
 package mail
 
 import (
-	"blog-web3/config"
-	"blog-web3/pkg/logger"
-	"blog-web3/pkg/mail"
-	"blog-web3/pkg/mail/eml"
 	"github.com/pkg/errors"
+	"github.com/project5e/web3-blog/config"
+	"github.com/project5e/web3-blog/pkg/logger"
+	"github.com/project5e/web3-blog/pkg/mail"
+	"github.com/project5e/web3-blog/pkg/mail/eml"
 	"strings"
 	"time"
 )

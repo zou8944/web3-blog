@@ -1,8 +1,8 @@
 package helpers
 
 import (
-	"blog-web3/pkg/logger"
 	"github.com/google/uuid"
+	"github.com/project5e/web3-blog/pkg/logger"
 )
 
 func GenerateNonce() string {

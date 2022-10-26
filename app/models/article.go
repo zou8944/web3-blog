@@ -1,8 +1,8 @@
 package models
 
 import (
-	"blog-web3/pkg/database"
-	"blog-web3/pkg/logger"
+	"github.com/project5e/web3-blog/pkg/database"
+	"github.com/project5e/web3-blog/pkg/logger"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 	"time"

@@ -1,8 +1,8 @@
 package route
 
 import (
-	"blog-web3/app/http/controller"
 	"github.com/gin-gonic/gin"
+	"github.com/project5e/web3-blog/app/http/controller"
 )
 
 func RegisterRoutes(g *gin.Engine) {

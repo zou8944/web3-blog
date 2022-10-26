@@ -1,8 +1,8 @@
 package app
 
 import (
-	"blog-web3/config"
-	pkgConfig "blog-web3/pkg/config"
+	"github.com/project5e/web3-blog/config"
+	pkgConfig "github.com/project5e/web3-blog/pkg/config"
 )
 
 func IsLocal() bool {

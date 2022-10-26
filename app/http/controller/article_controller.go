@@ -1,13 +1,13 @@
 package controller
 
 import (
-	"blog-web3/app/mail"
-	"blog-web3/app/models"
-	"blog-web3/pkg/logger"
-	"blog-web3/pkg/response"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"github.com/project5e/web3-blog/app/mail"
+	"github.com/project5e/web3-blog/app/models"
+	"github.com/project5e/web3-blog/pkg/logger"
+	"github.com/project5e/web3-blog/pkg/response"
 	"gorm.io/datatypes"
 )
 

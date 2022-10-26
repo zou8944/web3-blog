@@ -1,8 +1,8 @@
 package mail
 
 import (
-	"blog-web3/pkg/mail/eml"
 	"github.com/pkg/errors"
+	"github.com/project5e/web3-blog/pkg/mail/eml"
 	"regexp"
 	"strings"
 	"time"

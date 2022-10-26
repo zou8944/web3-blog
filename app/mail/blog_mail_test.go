@@ -1,9 +1,9 @@
 package mail
 
 import (
-	"blog-web3/pkg/mail/eml"
 	"github.com/emersion/go-message/mail"
 	"github.com/pkg/errors"
+	"github.com/project5e/web3-blog/pkg/mail/eml"
 	"testing"
 	"time"
 )

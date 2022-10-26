@@ -1,8 +1,8 @@
 package database
 
 import (
-	"blog-web3/config"
 	"github.com/pkg/errors"
+	"github.com/project5e/web3-blog/config"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

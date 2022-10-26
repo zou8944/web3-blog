@@ -1,9 +1,9 @@
 package logger
 
 import (
-	"blog-web3/pkg/app"
 	"github.com/natefinch/lumberjack"
 	"github.com/pkg/errors"
+	"github.com/project5e/web3-blog/pkg/app"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"os"

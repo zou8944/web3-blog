@@ -1,7 +1,7 @@
 package models
 
 import (
-	"blog-web3/pkg/database"
+	"github.com/project5e/web3-blog/pkg/database"
 	"time"
 )
 

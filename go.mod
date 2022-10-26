@@ -1,4 +1,4 @@
-module blog-web3
+module github.com/project5e/web3-blog
 
 go 1.18
 
