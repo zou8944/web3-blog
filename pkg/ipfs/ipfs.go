@@ -1,12 +1,22 @@
 package ipfs
 
 import (
-	"github.com/web3-storage/go-w3s-client"
+	"bytes"
+	shell "github.com/ipfs/go-ipfs-api"
 )
 
-var client *w3s.Client
+const IPFS_GATWAY = "https://gateway.ipfs.io/ipfs/"
+
+var ipfsClient *shell.Shell
 
 func Init() {
-	// https://pkg.go.dev/github.com/web3-storage/go-w3s-client#section-readme
-	//client, err := w3s.NewClient(w3s.WithToken(configs.Conf.Web3StorageToken))
+	ipfsClient = shell.NewShell("localhost:5001")
+}
+
+func UploadData(b []byte) (string, error) {
+	cid, err := ipfsClient.Add(bytes.NewReader(b))
+	if err != nil {
+		return "", nil
+	}
+	return IPFS_GATWAY + cid, err
 }

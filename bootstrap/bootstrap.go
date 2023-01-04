@@ -9,4 +9,5 @@ func SetupAll(engine *gin.Engine) {
 	SetupRequest()
 	SetupDatabase()
 	SetupMailer()
+	SetupIPFS()
 }
