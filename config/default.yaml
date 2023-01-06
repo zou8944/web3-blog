@@ -20,6 +20,10 @@ database:
   sqlite_file_path: web3_blog.db
 business:
   support_email: support@zou8944.com
-web3_storage_token: xxx
+arweave:
+  wallet_key_file: ./keyfile.json
+  endpoint: https://arseed.web3infra.dev
+  bundlr_endpoint: "https://node2.bundlr.network"
+  app_name: "4tune-web3-blog"
 jwt:
   sign_key: xxxx

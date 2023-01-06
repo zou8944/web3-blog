@@ -7,6 +7,7 @@ import (
 	"github.com/everFinance/goar/types"
 	"github.com/everFinance/goar/utils"
 	"github.com/pkg/errors"
+	"github.com/project5e/web3-blog/config"
 	"io"
 	"log"
 	"net/http"
@@ -14,13 +15,11 @@ import (
 	"time"
 )
 
-const walletKeyFile = "./keyfile.json"
-const arweaveNode = "https://arseed.web3infra.dev"
-const bundlrNode = "https://node2.bundlr.network"
-
-const appName = "4tune-web3-blog"
-
-const graphQLFmt = `
+var keyPath = config.ArWeave.WalletKeyFile
+var endpoint = config.ArWeave.Endpoint
+var bundlrEndpoint = config.ArWeave.BundlrEndpoint
+var appName = config.ArWeave.AppName
+var graphQLFmt = `
 query {
   transactions(
     first: %d,
@@ -28,7 +27,7 @@ query {
     tags: [
         {
             name: "App-Name",
-            values: ["4tune-web3-blog"]
+            values: ["%s"]
         }
     ],
     owners: [
@@ -66,7 +65,7 @@ var wallet *goar.Wallet
 var itemSigner *goar.ItemSigner
 
 func Init() {
-	if _wallet, err := goar.NewWalletFromPath(walletKeyFile, arweaveNode); err != nil {
+	if _wallet, err := goar.NewWalletFromPath(keyPath, endpoint); err != nil {
 		log.Fatalf("%+v", err)
 	} else {
 		wallet = _wallet
@@ -99,7 +98,7 @@ func UploadData(b []byte) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	resp, err := utils.SubmitItemToBundlr(item, bundlrNode)
+	resp, err := utils.SubmitItemToBundlr(item, bundlrEndpoint)
 	if err != nil {
 		return "", err
 	}
@@ -109,7 +108,7 @@ func UploadData(b []byte) (string, error) {
 
 // GetPost get post from arweave by transaction id
 func GetPost(txId string) (string, error) {
-	resp, err := http.Get(fmt.Sprintf("%s/%s", arweaveNode, txId))
+	resp, err := http.Get(fmt.Sprintf("%s/%s", endpoint, txId))
 	if err != nil {
 		return "", err
 	}
@@ -166,7 +165,7 @@ func listPostTxId() ([]string, error) {
 	cursor := ""
 	owner := wallet.Signer.Address
 	for true {
-		resBytes, err := wallet.Client.GraphQL(fmt.Sprintf(graphQLFmt, limit, cursor, owner))
+		resBytes, err := wallet.Client.GraphQL(fmt.Sprintf(graphQLFmt, limit, cursor, appName, owner))
 		if err != nil {
 			return nil, err
 		}

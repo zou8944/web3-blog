@@ -8,13 +8,13 @@ import (
 // viper use mapstructure to unmarshal config to struct, instead json or yaml
 
 type app struct {
-	Server           server   `mapstructure:"server"`
-	Logger           logger   `mapstructure:"logger"`
-	AWS              aws      `mapstructure:"aws"`
-	Database         database `mapstructure:"database"`
-	Business         business `mapstructure:"business"`
-	Web3StorageToken string   `mapstructure:"web3_storage_token"`
-	JWT              jwt      `mapstructure:"jwt"`
+	Server   server   `mapstructure:"server"`
+	Logger   logger   `mapstructure:"logger"`
+	AWS      aws      `mapstructure:"aws"`
+	Database database `mapstructure:"database"`
+	Business business `mapstructure:"business"`
+	ArWeave  arWeave  `mapstructure:"arweave"`
+	JWT      jwt      `mapstructure:"jwt"`
 }
 
 type server struct {
@@ -56,13 +56,20 @@ type jwt struct {
 	SignKey string `mapstructure:"sign_key"`
 }
 
+type arWeave struct {
+	WalletKeyFile  string `mapstructure:"wallet_key_file"`
+	Endpoint       string `mapstructure:"endpoint"`
+	BundlrEndpoint string `mapstructure:"bundlr_endpoint"`
+	AppName        string `mapstructure:"app_name"`
+}
+
 var ENV string
 var Server server
 var Logger logger
 var AWS aws
 var Database database
 var Business business
-var Web3StorageToken string
+var ArWeave arWeave
 var JWT jwt
 
 func Parse() error {
@@ -75,7 +82,7 @@ func Parse() error {
 	AWS = config.AWS
 	Database = config.Database
 	Business = config.Business
-	Web3StorageToken = config.Web3StorageToken
+	ArWeave = config.ArWeave
 	JWT = config.JWT
 	ENV = viper.GetString("env")
 	return nil
