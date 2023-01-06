@@ -10,4 +10,5 @@ func SetupAll(engine *gin.Engine) {
 	SetupDatabase()
 	SetupMailer()
 	SetupIPFS()
+	SetupArWeave()
 }
