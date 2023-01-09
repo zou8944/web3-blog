@@ -1,7 +1,10 @@
 package models
 
 import (
+	"github.com/goccy/go-json"
+	"github.com/project5e/web3-blog/pkg/arweave"
 	"github.com/project5e/web3-blog/pkg/database"
+	"github.com/project5e/web3-blog/pkg/ipfs"
 	"github.com/project5e/web3-blog/pkg/logger"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
@@ -9,20 +12,20 @@ import (
 )
 
 type Article struct {
-	ID        int64          `json:"id" gorm:"primaryKey"`
-	Username  string         `json:"username"`
-	Title     string         `json:"title" gorm:"uniqueIndex"`
-	Content   string         `json:"content"`
-	Tags      datatypes.JSON `json:"tags"`
-	Visible   string         `json:"visible"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"-"`
+	ArWeaveTxID string         `json:"ar_weave_tx_id" gorm:"primaryKey"`
+	IpfsID      string         `json:"ipfs_id" gorm:"uniqueIndex"`
+	Title       string         `json:"title" gorm:"uniqueIndex"`
+	Content     string         `json:"content"`
+	Tags        datatypes.JSON `json:"tags"`
+	Visible     string         `json:"visible"`
+	CreatedAt   time.Time      `json:"created_at"`
+	UpdatedAt   time.Time      `json:"updated_at"`
+	DeletedAt   gorm.DeletedAt `json:"-"`
 }
 
-func ListArticleByUser(username string) []Article {
+func ListArticle() []Article {
 	var articles []Article
-	database.DB.Model(Article{}).Where("username = ?", username).Find(&articles)
+	database.DB.Model(Article{}).Find(&articles)
 	if database.DB.Error != nil {
 		logger.Errorf("List article fail. %v", database.DB.Error)
 		return nil
@@ -30,18 +33,76 @@ func ListArticleByUser(username string) []Article {
 	return articles
 }
 
-func GetArticleByTitle(username string, title string) *Article {
+func GetArticleByTitle(title string) *Article {
 	var article Article
-	database.DB.Model(Article{}).Where("username = ? and title = ?", username, title).Find(&article)
+	database.DB.Model(Article{}).Where("title = ?", title).Find(&article)
+	return &article
+}
+
+func GetArticleById(id string) *Article {
+	var article Article
+	database.DB.Model(Article{}).Where("ar_weave_tx_id = ?", id).Find(&article)
 	return &article
 }
 
 func (a *Article) Create() bool {
+	articleData, err := a.Web3Marshal()
+	if err != nil {
+		logger.ErrorIf(err)
+		return false
+	}
+	cid, err := ipfs.UploadData(articleData)
+	if err != nil {
+		logger.ErrorIf(err)
+		return false
+	}
+	a.IpfsID = cid
+	txId, err := arweave.UploadData(articleData)
+	if err != nil {
+		logger.ErrorIf(err)
+		return false
+	}
+	a.ArWeaveTxID = txId
 	database.DB.Create(a)
-	return a.ID > 0
+	logger.ErrorIf(database.DB.Error)
+	return database.DB.Error == nil
 }
 
-func (a *Article) Save() bool {
+func (a *Article) Update() bool {
+	articleData, err := a.Web3Marshal()
+	if err != nil {
+		logger.ErrorIf(err)
+		return false
+	}
+	cid, err := ipfs.UploadData(articleData)
+	if err != nil {
+		logger.ErrorIf(err)
+		return false
+	}
+	a.IpfsID = cid
+	txId, err := arweave.UploadData(articleData)
+	if err != nil {
+		logger.ErrorIf(err)
+		return false
+	}
+	a.ArWeaveTxID = txId
 	database.DB.Save(a)
+	logger.ErrorIf(database.DB.Error)
 	return database.DB.Error == nil
+}
+
+func (a *Article) Delete() bool {
+	return a.Delete()
+}
+
+func (a *Article) Web3Marshal() ([]byte, error) {
+	type _article struct {
+		Title   string `json:"title"`
+		Content string `json:"content"`
+	}
+	article := _article{
+		Title:   a.Title,
+		Content: a.Content,
+	}
+	return json.Marshal(article)
 }

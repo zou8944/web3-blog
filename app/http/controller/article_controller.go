@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"github.com/project5e/web3-blog/app/http/requests"
 	"github.com/project5e/web3-blog/app/mail"
 	"github.com/project5e/web3-blog/app/models"
 	"github.com/project5e/web3-blog/pkg/logger"
@@ -17,13 +18,45 @@ func NewArticleController() *ArticleController {
 	return &ArticleController{}
 }
 
-func (ac *ArticleController) ListArticle(c *gin.Context) {
-	username := c.Query("username")
-	if username == "" {
-		response.AbortWith400(c, errors.New("username in query is required"))
+func (ac *ArticleController) Create(c *gin.Context) {
+	var body requests.ArticleCreateRequest
+	if ok := requests.BindAndValidate(c, &body); !ok {
 		return
 	}
-	articles := models.ListArticleByUser(username)
+	model := models.Article{
+		Title:   body.Title,
+		Content: body.Content,
+	}
+	if ok := model.Create(); !ok {
+		response.AbortWith500(c)
+	}
+	response.Created(c, model)
+}
+
+func (ar *ArticleController) Update(c *gin.Context) {
+	var body requests.ArticleUpdateRequest
+	if ok := requests.BindAndValidate(c, &body); !ok {
+		return
+	}
+	articleId := c.Param("id")
+	model := models.GetArticleById(articleId)
+	if ok := model.Update(); !ok {
+		response.AbortWith500(c)
+	}
+	response.Created(c, model)
+}
+
+func (ar *ArticleController) Delete(c *gin.Context) {
+	articleId := c.Param("id")
+	model := models.GetArticleById(articleId)
+	if ok := model.Delete(); !ok {
+		response.AbortWith500(c)
+	}
+	response.Created(c, model)
+}
+
+func (ac *ArticleController) List(c *gin.Context) {
+	articles := models.ListArticle()
 	response.SuccessWithData(c, articles)
 }
 
@@ -32,18 +65,17 @@ func (ac *ArticleController) HandleEmail(b *mail.BlogMail) error {
 	case mail.Create:
 		tags, _ := json.Marshal(b.Tags)
 		article := models.Article{
-			Username: b.UserName,
-			Title:    b.Title,
-			Content:  b.Content,
-			Tags:     datatypes.JSON(tags),
-			Visible:  b.Visible,
+			Title:   b.Title,
+			Content: b.Content,
+			Tags:    datatypes.JSON(tags),
+			Visible: b.Visible,
 		}
 		if ok := article.Create(); !ok {
 			return errors.New("create article fail")
 		}
 	case mail.Update:
 		tags, _ := json.Marshal(b.Tags)
-		article := models.GetArticleByTitle(b.UserName, b.Title)
+		article := models.GetArticleByTitle(b.Title)
 		if article == nil {
 			logger.Warnf("No exist article found with title %s, ignore", article)
 			return nil
