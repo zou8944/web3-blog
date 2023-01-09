@@ -20,9 +20,13 @@ This is a DBlog.
 - Email receiving and sending over AWS SES, SNS, SQS
 - Parse eml file ([RFC5322](https://www.rfc-editor.org/rfc/rfc5322))
 - Login with [METAMASK](https://metamask.io/)
+- Store in IPFS
+- Store in arweave
 
 ### To be completed
 
-- Store in IPFS
-- Store in arweave
+- blog migration from hexo or other platform
+- front end page
+- admin page
 - Sqlite file backup
+- dockerize
