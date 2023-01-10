@@ -15,10 +15,10 @@ import (
 	"time"
 )
 
-var keyPath = config.ArWeave.WalletKeyFile
-var endpoint = config.ArWeave.Endpoint
-var bundlrEndpoint = config.ArWeave.BundlrEndpoint
-var appName = config.ArWeave.AppName
+var keyPath string
+var endpoint string
+var bundlrEndpoint string
+var appName string
 var graphQLFmt = `
 query {
   transactions(
@@ -65,13 +65,18 @@ var wallet *goar.Wallet
 var itemSigner *goar.ItemSigner
 
 func Init() {
+	keyPath = config.ArWeave.WalletKeyFile
+	endpoint = config.ArWeave.Endpoint
+	bundlrEndpoint = config.ArWeave.BundlrEndpoint
+	appName = config.ArWeave.AppName
+
 	if _wallet, err := goar.NewWalletFromPath(keyPath, endpoint); err != nil {
-		log.Fatalf("%+v", err)
+		log.Fatalf("%+v", errors.WithStack(err))
 	} else {
 		wallet = _wallet
 	}
 	if _itemSigner, err := goar.NewItemSigner(wallet.Signer); err != nil {
-		log.Fatalf("%+v", err)
+		log.Fatalf("%+v", errors.WithStack(err))
 	} else {
 		itemSigner = _itemSigner
 	}
