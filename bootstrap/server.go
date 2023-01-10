@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/project5e/web3-blog/pkg/app"
 	"time"
 )
 
@@ -18,5 +19,8 @@ func SetupServer(engine *gin.Engine) {
 		AllowWildcard:          true,
 		AllowBrowserExtensions: true,
 	}))
+	if app.IsProduction() {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	fmt.Println("Logger load success")
 }
