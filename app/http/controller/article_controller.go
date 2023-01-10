@@ -10,6 +10,7 @@ import (
 	"github.com/project5e/web3-blog/pkg/logger"
 	"github.com/project5e/web3-blog/pkg/response"
 	"gorm.io/datatypes"
+	"net/http"
 )
 
 type ArticleController struct{}
@@ -55,9 +56,30 @@ func (ar *ArticleController) Delete(c *gin.Context) {
 	response.Created(c, model)
 }
 
-func (ac *ArticleController) List(c *gin.Context) {
+func (ac *ArticleController) ListPage(c *gin.Context) {
 	articles := models.ListArticle()
-	response.SuccessWithData(c, articles)
+	// let article content be article abstract
+	for i, article := range articles {
+		aContentRune := []rune(article.Content)
+		if len(aContentRune) > 100 {
+			articles[i].Content = string(aContentRune[:100])
+		}
+	}
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"Articles": articles,
+	})
+}
+
+func (ac *ArticleController) DetailPage(c *gin.Context) {
+	articleId := c.Param("id")
+	article := models.GetArticleById(articleId)
+	if article == nil {
+		c.HTML(http.StatusNotFound, "404.html", nil)
+	} else {
+		c.HTML(http.StatusOK, "detail.html", gin.H{
+			"Article": article,
+		})
+	}
 }
 
 func (ac *ArticleController) HandleEmail(b *mail.BlogMail) error {

@@ -15,15 +15,14 @@
         </header>
         <!-- header ends here -->
 
-        <!-- Card 1 -->
         <div class="rounded-sm w-3/4 grid grid-cols-12 bg-white shadow p-3 gap-2 items-center">
             <!-- Title -->
             <div class="col-span-11 text-center">
-                <p class="text-blue-600 font-semibold"> Deploy a Django App Using Gunicorn to App Platform </p>
+                <p class="text-blue-600 font-semibold"> {{.Article.Title}} </p>
             </div>
             <!-- Description -->
             <div class="md:col-start-1 col-span-11">
-                <p class="text-sm text-gray-800 font-light"> Build a Python app using Django and then deploy the app to App Platform using a Gunicorn HTTP server. </p>
+                <p class="text-sm text-gray-800 font-light"> {{.Article.Content}} </p>
             </div>
         </div>
     </div>

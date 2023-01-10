@@ -19,6 +19,7 @@ func SetupServer(engine *gin.Engine) {
 		AllowWildcard:          true,
 		AllowBrowserExtensions: true,
 	}))
+	engine.LoadHTMLGlob("templates/*")
 	if app.IsProduction() {
 		gin.SetMode(gin.ReleaseMode)
 	}

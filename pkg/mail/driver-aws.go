@@ -86,7 +86,7 @@ func (m *AWSMailer) getQueueUrl() *string {
 	}
 	res, err := m.SQS.GetQueueUrl(m.Context, req)
 	if err != nil {
-		logger.Errorf("Get queue url fail. %v", err)
+		logger.Errorf("DetailPage queue url fail. %v", err)
 		return nil
 	}
 	return res.QueueUrl

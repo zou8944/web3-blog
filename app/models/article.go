@@ -41,7 +41,13 @@ func GetArticleByTitle(title string) *Article {
 
 func GetArticleById(id string) *Article {
 	var article Article
-	database.DB.Model(Article{}).Where("ar_weave_tx_id = ?", id).Find(&article)
+	err := database.DB.Model(Article{}).Where("ar_weave_tx_id = ?", id).First(&article).Error
+	if err != nil {
+		if err != gorm.ErrRecordNotFound {
+			logger.Errorf("Get article fail. %+v", err)
+		}
+		return nil
+	}
 	return &article
 }
 
