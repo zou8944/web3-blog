@@ -14,6 +14,7 @@ type app struct {
 	Database database `mapstructure:"database"`
 	Business business `mapstructure:"business"`
 	ArWeave  arWeave  `mapstructure:"arweave"`
+	IPFS     ipfs     `mapstructure:"ipfs"`
 	JWT      jwt      `mapstructure:"jwt"`
 }
 
@@ -57,10 +58,16 @@ type jwt struct {
 }
 
 type arWeave struct {
+	Enable         bool   `mapstructure:"enable"`
 	WalletKeyFile  string `mapstructure:"wallet_key_file"`
 	Endpoint       string `mapstructure:"endpoint"`
 	BundlrEndpoint string `mapstructure:"bundlr_endpoint"`
 	AppName        string `mapstructure:"app_name"`
+}
+
+type ipfs struct {
+	Enable bool   `mapstructure:"enable"`
+	URL    string `mapstructure:"url"`
 }
 
 var ENV string
@@ -71,6 +78,7 @@ var Database database
 var Business business
 var ArWeave arWeave
 var JWT jwt
+var IPFS ipfs
 
 func Parse() error {
 	var config app
@@ -83,6 +91,7 @@ func Parse() error {
 	Database = config.Database
 	Business = config.Business
 	ArWeave = config.ArWeave
+	IPFS = config.IPFS
 	JWT = config.JWT
 	ENV = viper.GetString("env")
 	return nil
