@@ -57,16 +57,31 @@ func (ar *ArticleController) Delete(c *gin.Context) {
 }
 
 func (ac *ArticleController) ListPage(c *gin.Context) {
+	type DisplayArticle struct {
+		Year  string `json:"year"`
+		Date  string `json:"date"`
+		Title string `json:"title"`
+		Desc  string `json:"desc"`
+	}
 	articles := models.ListArticle()
-	// let article content be article abstract
-	for i, article := range articles {
+	var displayArticles []DisplayArticle
+	for _, article := range articles {
 		aContentRune := []rune(article.Content)
+		var articleDesc string
 		if len(aContentRune) > 100 {
-			articles[i].Content = string(aContentRune[:100])
+			articleDesc = string(aContentRune[:100])
+		} else {
+			articleDesc = article.Content
 		}
+		displayArticles = append(displayArticles, DisplayArticle{
+			Year:  article.CreatedAt.Format("2006"),
+			Date:  article.CreatedAt.Format("01-02"),
+			Title: article.Title,
+			Desc:  articleDesc,
+		})
 	}
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"Articles": articles,
+		"Articles": displayArticles,
 	})
 }
 
