@@ -5,3 +5,5 @@ tmp
 storage
 ipfs-data
 **/keyfile.json
+node_modules
+package-lock.json

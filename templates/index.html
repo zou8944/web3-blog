@@ -4,7 +4,10 @@
     <title>Web3 Blog</title>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/my-tailwind.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
     <style>
         .grid-cols-12 {
             grid-template-columns: repeat(12, 1fr);
@@ -29,8 +32,8 @@
             </div>
 
             <!-- Description -->
-            <div class="md:col-start-2 col-span-11">
-                <p class="text-sm text-gray-800 font-light"> {{$article.Desc}} </p>
+            <div class="md:col-start-2 col-span-11 text-sm text-gray-800 font-light article-desc">
+                {{$article.Desc}}
             </div>
 
         </a>
@@ -39,4 +42,35 @@
     </div>
 </div>
 </body>
+<script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+
+    const renderer = (function () {
+        const renderer = new marked.Renderer();
+        renderer.heading = function (text, level, raw) {
+            const anchor = this.options.headerPrefix + raw.toLowerCase().replace(/[^\w\\u4e00-\\u9fa5]]+/g, '-');
+            return '<h' + level + ' class="anchor text-lg" id="' + anchor + '">' + text + '</h' + level + '>\n';
+        }
+        return renderer
+    })();
+    marked.setOptions({
+        renderer: renderer,
+        highlight: function (code, lang) {
+            const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+            return hljs.highlight(code, {language}).value;
+        },
+        langPrefix: 'hljs language-', // highlight.js css expects a top-level 'hljs' class.
+        pedantic: false,
+        gfm: true,
+        breaks: true,
+        sanitize: false,
+        smartLists: true,
+        smartypants: true,
+        xhtml: true
+    });
+    // let articleNodes = document.getElementsByClassName("article-desc")
+    // for (let i = 0; i < articleNodes.length; i++ ){
+    //     articleNodes[i].innerHTML = marked.parse(articleNodes[i].innerHTML)
+    // }
+</script>
 </html>

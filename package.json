@@ -1,0 +1,7 @@
+{
+  "name": "web3-blog",
+  "version": "1.0.0",
+  "dependencies": {
+    "@tailwindcss/typography": "^0.5.9"
+  }
+}
