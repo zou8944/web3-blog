@@ -58,10 +58,11 @@ func (ar *ArticleController) Delete(c *gin.Context) {
 
 func (ac *ArticleController) ListPage(c *gin.Context) {
 	type DisplayArticle struct {
-		Year  string `json:"year"`
-		Date  string `json:"date"`
-		Title string `json:"title"`
-		Desc  string `json:"desc"`
+		Year        string
+		Date        string
+		Title       string
+		Desc        string
+		ArWeaveTxID string
 	}
 	articles := models.ListArticle()
 	var displayArticles []DisplayArticle
@@ -74,10 +75,11 @@ func (ac *ArticleController) ListPage(c *gin.Context) {
 			articleDesc = article.Content
 		}
 		displayArticles = append(displayArticles, DisplayArticle{
-			Year:  article.CreatedAt.Format("2006"),
-			Date:  article.CreatedAt.Format("01-02"),
-			Title: article.Title,
-			Desc:  articleDesc,
+			Year:        article.CreatedAt.Format("2006"),
+			Date:        article.CreatedAt.Format("01-02"),
+			Title:       article.Title,
+			Desc:        articleDesc,
+			ArWeaveTxID: article.ArWeaveTxID,
 		})
 	}
 	c.HTML(http.StatusOK, "index.html", gin.H{

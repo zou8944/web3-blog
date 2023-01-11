@@ -15,16 +15,25 @@
         </header>
         <!-- header ends here -->
 
-        <div class="rounded-sm w-3/4 grid grid-cols-12 bg-white shadow p-3 gap-2 items-center">
+        <a class="rounded-sm w-1/2 bg-gray-100 p-4 bg-opacity-0 transition delay-150 duration-300 ease-in-out hover:scale-150 transform" href="/">
+            <p class="text-center"><b>H O M E</b></p>
+        </a>
+
+        <div class="rounded-sm w-3/4 bg-white shadow p-3 gap-2 items-center">
             <!-- Title -->
-            <div class="col-span-11 text-center">
+            <div class="text-center mb-2">
                 <p class="text-blue-600 font-semibold"> {{.Article.Title}} </p>
             </div>
             <!-- Description -->
-            <div class="md:col-start-1 col-span-11">
+            <div class="text-justify p-2">
                 <p class="text-sm text-gray-800 font-light"> {{.Article.Content}} </p>
             </div>
         </div>
+        <a class="rounded-md w-1/2 bg-gray-100 shadow grid grid-cols-4 items-center p-4 hover:shadow-lg transition delay-150 duration-300 ease-in-out hover:scale-105 transform" href="https://viewblock.io/arweave/tx/{{.Article.ArWeaveTxID}}" target="_blank">
+            <p class="text-sm text-left">ARWEAVE TX</p>
+            <p class="text-lg text-right col-span-3">{{.Article.ArWeaveTxID}}</p>
+        </a>
+
     </div>
 </div>
 </body>
