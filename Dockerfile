@@ -11,10 +11,9 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o web3_blog .
 
 FROM alpine
 
-WORKDIR /server
-
 COPY --from=builder /build/web3_blog ./
 COPY config/default.yaml ./config/
+COPY templates ./templates
 
 EXPOSE 9000
 
