@@ -26,7 +26,7 @@ type Article struct {
 
 func ListArticle() []Article {
 	var articles []Article
-	database.DB.Model(Article{}).Find(&articles)
+	database.DB.Model(Article{}).Order("created_at desc").Find(&articles)
 	if database.DB.Error != nil {
 		logger.Errorf("List article fail. %v", database.DB.Error)
 		return nil
