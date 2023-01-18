@@ -148,23 +148,25 @@ func readArticle(f *os.File) (*Article, error) {
 	// 扫描到第一个---时meta开始，此时meta前面不应该有任何内容，否则该文章没有meta；扫描到第二个---时meta结束
 	indicator := "prefix"
 	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
+		line := scanner.Text()
 		switch indicator {
 		case "prefix":
-			if line == "---" {
+			pLine := strings.TrimSpace(line)
+			if pLine == "---" {
 				if len(prefix) != 0 {
 					return nil, errors.New(fmt.Sprintf("Article has no meta field: %s", title))
 				}
 				indicator = "meta"
 				continue
 			}
-			prefix = prefix + line
+			prefix = prefix + pLine
 		case "meta":
-			if line == "---" {
+			mLine := strings.TrimSpace(line)
+			if mLine == "---" {
 				indicator = "content"
 				continue
 			}
-			meta = meta + line + "\n"
+			meta = meta + mLine + "\n"
 		case "content":
 			content = content + line + "\n"
 		}
@@ -226,7 +228,7 @@ func persistent(article *Article) {
 		_article.Title = article.Title
 		_article.Content = article.Content
 		_article.CreatedAt = article.CreatedAt
-		if ok := _article.Update(); !ok {
+		if ok := _article.UpdateBySlug(); !ok {
 			logger.Errorf("Article update fail. title: %s", article.Title)
 		} else {
 			logger.Infof("Article updated: %s", article.Title)
