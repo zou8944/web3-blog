@@ -13,7 +13,8 @@ import (
 
 type Article struct {
 	ArWeaveTxID string         `json:"ar_weave_tx_id" gorm:"primaryKey"`
-	IpfsID      string         `json:"ipfs_id" gorm:"uniqueIndex"`
+	IpfsID      string         `json:"ipfs_id"`
+	Slug        string         `json:"slug" gorm:"uniqueIndex"`
 	Title       string         `json:"title" gorm:"uniqueIndex"`
 	Content     string         `json:"content"`
 	Tags        datatypes.JSON `json:"tags"`
@@ -31,6 +32,17 @@ func ListArticle() []Article {
 		return nil
 	}
 	return articles
+}
+
+func GetArticleBySlug(slug string) *Article {
+	var article Article
+	if err := database.DB.Model(Article{}).Where("slug = ?", slug).First(&article).Error; err != nil {
+		if err != gorm.ErrRecordNotFound {
+			logger.Errorf("Get article fail. %+v", err)
+		}
+		return nil
+	}
+	return &article
 }
 
 func GetArticleByTitle(title string) *Article {
