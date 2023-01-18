@@ -7,7 +7,7 @@ COPY ./ ./
 
 RUN go env -w GOPROXY=https://goproxy.cn,direct && go mod download
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o web3_blog .
+RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o web3_blog .
 
 FROM alpine
 
