@@ -109,6 +109,29 @@ func (a *Article) Update() bool {
 	return database.DB.Error == nil
 }
 
+func (a *Article) UpdateBySlug() bool {
+	articleData, err := a.Web3Marshal()
+	if err != nil {
+		logger.ErrorIf(err)
+		return false
+	}
+	cid, err := ipfs.UploadData(articleData)
+	if err != nil {
+		logger.ErrorIf(err)
+		return false
+	}
+	a.IpfsID = cid
+	txId, err := arweave.UploadData(articleData)
+	if err != nil {
+		logger.ErrorIf(err)
+		return false
+	}
+	a.ArWeaveTxID = txId
+	database.DB.Model(Article{}).Where("slug = ?", a.Slug).Updates(a)
+	logger.ErrorIf(database.DB.Error)
+	return database.DB.Error == nil
+}
+
 func (a *Article) Delete() bool {
 	return a.Delete()
 }
