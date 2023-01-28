@@ -12,4 +12,4 @@ build-docker:
 	docker build -t zou8944/web3-blog .
 
 run-docker:
-	docker run --name web3-blog -v ~/.web3-blog/config:/config -e ENV=prod zou8944/web3-blog:latest
+	docker run --name web3-blog -v ~/.web3-blog/config:/config -p 9000:9000 -e ENV=prod zou8944/web3-blog:latest
