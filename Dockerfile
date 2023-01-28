@@ -9,7 +9,7 @@ RUN go env -w GOPROXY=https://goproxy.cn,direct && go mod download
 
 RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o web3_blog .
 
-FROM alpine
+FROM debian:buster-slim
 
 COPY --from=builder /build/web3_blog ./
 COPY config/default.yaml ./config/

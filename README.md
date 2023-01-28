@@ -29,7 +29,7 @@ make build-docker
 ### Docker
 
 - Prepare a directory A to mount to container, such as `~/web3-blog/config`
-- Copy config/default.yaml to A/{your-env}.yaml, replace your configuration
+- Copy config/default.yaml to A/{your-env}.yaml, replace your configuration field
 - Copy keyfile.json to A
 - Run `sudo docker run --name web3-blog -v A:/config -e ENV={your-env} {image-name}:latest`
 
