@@ -1,4 +1,4 @@
-package my_words
+package mywords
 
 import (
 	"archive/zip"
