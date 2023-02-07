@@ -7,6 +7,7 @@ import (
 	"github.com/project5e/web3-blog/app/http/requests"
 	"github.com/project5e/web3-blog/app/mail"
 	"github.com/project5e/web3-blog/app/models"
+	"github.com/project5e/web3-blog/pkg/import/mywords"
 	"github.com/project5e/web3-blog/pkg/logger"
 	"github.com/project5e/web3-blog/pkg/response"
 	"gorm.io/datatypes"
@@ -128,4 +129,12 @@ func (ac *ArticleController) HandleEmail(b *mail.BlogMail) error {
 		logger.Errorf("Unknown action: %v, ignore", b.Action)
 	}
 	return nil
+}
+
+func (ac *ArticleController) Import(c *gin.Context) {
+	if err := mywords.Import("https://github.com/zou8944/my-words"); err != nil {
+		response.AbortWith500(c)
+	} else {
+		response.Success(c)
+	}
 }

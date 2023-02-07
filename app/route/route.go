@@ -22,4 +22,7 @@ func RegisterRoutes(g *gin.Engine) {
 	g.GET("/", ac.ListPage)
 	g.GET("/articles", ac.ListPage)
 	g.GET("/articles/:id", ac.DetailPage)
+
+	// import trigger
+	g.POST("/import", ac.Import)
 }
