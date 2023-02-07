@@ -140,7 +140,9 @@ type Article struct {
 
 // read from file, convert to Article
 func readArticle(f *os.File) (*Article, error) {
-	title := filepath.Base(f.Name())
+	shortName := filepath.Base(f.Name())
+	suffix := filepath.Ext(f.Name())
+	title := strings.TrimSuffix(shortName, suffix)
 	scanner := bufio.NewScanner(f)
 	var prefix string
 	var meta string
