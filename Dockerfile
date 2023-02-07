@@ -17,4 +17,4 @@ COPY templates ./templates
 
 EXPOSE 9000
 
-ENTRYPOINT ["./web3_blog"]
+ENTRYPOINT ["./web3_blog", "runserver"]
