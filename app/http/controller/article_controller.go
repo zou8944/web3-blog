@@ -34,7 +34,7 @@ func (ac *ArticleController) Create(c *gin.Context) {
 	response.Created(c, model)
 }
 
-func (ar *ArticleController) Update(c *gin.Context) {
+func (ac *ArticleController) Update(c *gin.Context) {
 	var body requests.ArticleUpdateRequest
 	if ok := requests.BindAndValidate(c, &body); !ok {
 		return
@@ -47,7 +47,7 @@ func (ar *ArticleController) Update(c *gin.Context) {
 	response.Created(c, model)
 }
 
-func (ar *ArticleController) Delete(c *gin.Context) {
+func (ac *ArticleController) Delete(c *gin.Context) {
 	articleId := c.Param("id")
 	model := models.GetArticleById(articleId)
 	if ok := model.Delete(); !ok {
