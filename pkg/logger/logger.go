@@ -42,7 +42,7 @@ func getEncoder() zapcore.Encoder {
 		EncodeDuration: zapcore.SecondsDurationEncoder,
 		EncodeCaller:   zapcore.ShortCallerEncoder,
 	}
-	if app.IsLocal() || app.IsDev() || app.IsTest() {
+	if app.IsLocal() || app.IsDev() || app.IsTest() || app.IsProduction() {
 		encoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 		return zapcore.NewConsoleEncoder(encoderConfig)
 	} else {
