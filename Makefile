@@ -3,7 +3,7 @@ generate-tailwind-css:
 	npx tailwindcss -i templates/css/raw/input.css -o templates/css/my-tailwind.css --watch
 
 build-dev:
-	ENV=dev go build ./main.go -o web3-blog
+	ENV=dev go build -o web3-blog .
 
 run-dev:
 	ENV=dev go run ./main.go
