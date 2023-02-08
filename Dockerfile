@@ -11,6 +11,9 @@ RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o web3_blog .
 
 FROM debian:buster-slim
 
+# ca certificate used in sqs
+RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends ca-certificates curl
+
 COPY --from=builder /build/web3_blog ./
 COPY config/default.yaml ./config/
 COPY templates ./templates
