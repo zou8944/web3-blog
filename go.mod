@@ -21,8 +21,6 @@ require (
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.13.0
-	github.com/thinkerou/favicon v0.1.0
-	github.com/urfave/cli v1.22.5
 	github.com/urfave/cli/v2 v2.24.3
 	go.uber.org/zap v1.23.0
 	gorm.io/datatypes v1.0.1

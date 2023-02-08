@@ -5,7 +5,6 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/project5e/web3-blog/pkg/app"
-	"github.com/thinkerou/favicon"
 	"time"
 )
 
@@ -20,7 +19,8 @@ func SetupServer(engine *gin.Engine) {
 		AllowWildcard:          true,
 		AllowBrowserExtensions: true,
 	}))
-	engine.Use(favicon.New("templates/favicon.ico"))
+	engine.Static("/favicon.ico", "./templates/favicon.ico")
+	engine.Static("/css", "./templates/css")
 	engine.LoadHTMLGlob("templates/*.html")
 	if app.IsProduction() {
 		gin.SetMode(gin.ReleaseMode)
