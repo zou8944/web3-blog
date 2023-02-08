@@ -68,11 +68,7 @@ func getLoggerWriter(filename string, maxSize, maxBackup, maxAge int, compress b
 		Compress:   compress,
 	}
 
-	if app.IsLocal() || app.IsDev() || app.IsTest() {
-		return zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(lumberJackLogger))
-	} else {
-		return zapcore.AddSync(lumberJackLogger)
-	}
+	return zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(lumberJackLogger))
 }
 
 func InfoIf(err error) {
