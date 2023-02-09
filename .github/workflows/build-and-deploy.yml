@@ -17,6 +17,7 @@ jobs:
           docker push zou8944/web3-blog:latest
           docker logout
   deploy:
+    needs: build-docker
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source
