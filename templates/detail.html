@@ -49,6 +49,22 @@
         </a>
 
     </div>
+
+    <div id="container"></div>
+    <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+    <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+    <script>
+        let gitment = new Gitment({
+            id: '{{ .Article.Slug }}',
+            owner: 'zou8944',
+            repo: 'my-words',
+            oauth: {
+                client_id: '7a13240c068b6a6b91f0',
+                client_secret: 'f487b9d556966b1df93a0f4187f1ad9dcff6de1a',
+            },
+        })
+        gitment.render('container')
+    </script>
 </div>
 </body>
 <script type="text/javascript">
